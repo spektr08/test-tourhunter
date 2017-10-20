@@ -23,7 +23,7 @@ class BalanceForm extends Model
     {
         return [
             [['balance', 'user'], 'required'],
-            [['balance'], 'number'],
+            [['balance'], 'number','min'=>0],
             ['user', 'compare', 'compareValue' => Yii::$app->user->identity->name, 'operator' => '!=', 'type' => 'string'],
             
         ];
