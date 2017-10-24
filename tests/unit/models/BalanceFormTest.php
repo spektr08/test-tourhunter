@@ -23,8 +23,6 @@ class LoginFormTest extends \Codeception\Test\Unit
     {
        $user =  User::findOne(['username' => 'test']);
        if(!empty($user)){
-            $balance = Balance::findOne(['user_id'=>$user->id]);
-            $balance->delete();
             $user->delete();
        }
         
@@ -38,9 +36,8 @@ class LoginFormTest extends \Codeception\Test\Unit
         ]);
         $this->model->submit();
         $user =  User::findOne(['username' => 'test']); 
-        $balance = Balance::findOne(['user_id'=>$user->id]); 
         expect_that(!empty($user));
-        expect_that($balance->balance == 10.25);
+        expect_that($user->balance == 10.25);
        
     }
     
@@ -56,9 +53,8 @@ class LoginFormTest extends \Codeception\Test\Unit
         ]);
         $this->model->submit();
         $user =  User::findOne(['username' => 'test']); 
-        $balance = Balance::findOne(['user_id'=>$user->id]); 
         expect_that(!empty($user));
-        expect_that($balance->balance == 11.25);
+        expect_that($user->balance == 11.25);
        
     }
     

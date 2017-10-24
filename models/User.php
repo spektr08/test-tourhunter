@@ -7,7 +7,7 @@ use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
- 
+use app\models\behaviors\NumberBehavior;
 /**
  * User model
  *
@@ -34,7 +34,12 @@ class User extends ActiveRecord implements IdentityInterface
     public function behaviors()
     {
         return [
-           
+            [
+                'class' => NumberBehavior::className(),
+                'attributes' => [
+                    \yii\db\ActiveRecord::EVENT_BEFORE_UPDATE => ['balance'],
+                ],
+            ],
         ];
     }
  
@@ -46,8 +51,13 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
+            [['username'], 'string'],
+            [['balance'], 'number']
         ];
     }
+    
+    
+    
  
     /**
      * @inheritdoc
@@ -145,11 +155,8 @@ class User extends ActiveRecord implements IdentityInterface
         if (empty($model)) {
             $user = new User();
             $user->username = $name;
+            $user->balance = 0;
             if ($user->save()) {
-                $balance = new Balance;
-                $balance->user_id = $user->id;
-                $balance->balance = 0;
-                $balance->save();
                 return $user;
             }
         }

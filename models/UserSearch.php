@@ -5,30 +5,30 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Balance;
+use app\models\User;
 
 /**
- * BalanceSearch represents the model behind the search form about `app\models\Balance`.
+ * UserSearch represents the model behind the search form about `app\models\User`.
  */
-class BalanceSearch extends Balance {
-
-    public $userName;
-
+class UserSearch extends User
+{
     /**
      * @inheritdoc
      */
-    public function rules() {
+    public function rules()
+    {
         return [
-            [['id', 'user_id'], 'integer'],
+            [['id', 'status'], 'integer'],
+            [['username'], 'safe'],
             [['balance'], 'number'],
-            [['userName'], 'safe']
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function scenarios() {
+    public function scenarios()
+    {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
@@ -40,26 +40,14 @@ class BalanceSearch extends Balance {
      *
      * @return ActiveDataProvider
      */
-    public function search($params) {
-        $query = Balance::find();
+    public function search($params)
+    {
+        $query = User::find();
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-        ]);
-
-
-        $dataProvider->setSort([
-            'attributes' => [
-                'id',
-                'userName' => [
-                    'asc' => ['user.username' => SORT_ASC],
-                    'desc' => ['user.username' => SORT_DESC],
-                    'label' => 'User Name'
-                ],
-                'balance'
-            ]
         ]);
 
         $this->load($params);
@@ -73,16 +61,12 @@ class BalanceSearch extends Balance {
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'user_id' => $this->user_id,
             'balance' => $this->balance,
+            'status' => $this->status,
         ]);
 
-
-        $query->joinWith(['user' => function ($q) {
-                $q->where('user.username LIKE "%' . $this->userName . '%"');
-            }]);
+        $query->andFilterWhere(['like', 'username', $this->username]);
 
         return $dataProvider;
     }
-
 }

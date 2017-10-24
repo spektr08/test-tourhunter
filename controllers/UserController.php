@@ -70,7 +70,7 @@ class UserController extends Controller
             ],
         ]);;
         
-        $balance = \app\models\Balance::findOne(['user_id'=>Yii::$app->user->id])->balance;
+        $balance = \app\models\User::findOne(['id'=>Yii::$app->user->id])->balance;
         
         return $this->render('index', [
             'model'         => $model,
@@ -79,21 +79,4 @@ class UserController extends Controller
         ]);
     }
 
-   
-
-    /**
-     * Finds the Balance model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return Balance the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = User::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
-    }
 }

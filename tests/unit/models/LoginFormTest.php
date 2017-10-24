@@ -15,8 +15,6 @@ class BalanceFormTest extends \Codeception\Test\Unit
     {
        $user =  User::findOne(['username' => 'test']);
        if(!empty($user)){
-            $balance = Balance::findOne(['user_id'=>$user->id]);
-            $balance->delete();
             $user->delete();
        }
     }
@@ -43,8 +41,8 @@ class BalanceFormTest extends \Codeception\Test\Unit
         ]);
         $this->model->login();
                 
-       $balance = Balance::findOne(['user_id'=>\Yii::$app->user->id]);
-       expect_that($balance->balance == 0);
+       $user = User::findOne(['id'=>\Yii::$app->user->id]);
+       expect_that($user->balance == 0);
     }
 
     public function testLoginCorrect()

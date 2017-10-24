@@ -45,9 +45,6 @@ class BalanceForm extends Model
         $this->user_id_from = Yii::$app->user->id;
         $balanceWorker = new \app\workers\BalanceWorker($this);
         $this->user_id_to = $balanceWorker->movebalance(); 
-        $conttainer = new yii\di\Container;
-        $BalanceHistoryWorker   =  $conttainer->get('\app\workers\BalanceHistoryWorker');
-        $BalanceHistoryWorker->saveBalanceHistory($this->user_id_from,$this->user_id_to,$this->balance);
         return true;
     }
 }
